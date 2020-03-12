@@ -1,2 +1,2 @@
-int intvalue = 10  +5
+auto int intvalue=new int(10+5)
 ///This is just a comment

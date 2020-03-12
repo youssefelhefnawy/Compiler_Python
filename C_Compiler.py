@@ -1,4 +1,10 @@
 import re as Regex
+
+class Token:
+    def __init__(self, TYPE, VALUE):
+        self.TYPE = TYPE
+        self.VALUE = VALUE
+
 def ReadFile(FileName):
     FileInstance=open(FileName,"r")
     All_Lines= FileInstance.readlines()
@@ -8,8 +14,11 @@ def ReadFile(FileName):
 def ProduceTokens(Statements):
 
     return
-    
+
+Regex.MULTILINE
 ListOfLines=ReadFile("Input.txt")
+ListOfTokens = Regex.findall(r'\w+|\d+|//+.*$|/\*.*\*/|".*"|\'.*\'|[^\w\s]+', AllLines)
+print(ListOfTokens)
 List_2nd_of_Tokens=['INTEGRAL_LITERAL','FLOAT_LITERAL'
                 ,'STRING_LITERAL','CHAR_LITERAL',
                 'LEFT_CURLY_B','RIGHT-CURLY_B',
@@ -25,20 +34,33 @@ List_2nd_of_Tokens=['INTEGRAL_LITERAL','FLOAT_LITERAL'
                 'BITWISE_XOR','LEFT_SHIFT','RIGHT_SHIFT'
                 'BITWISE_NOT','MULTI_COMMENT','SINGLE_COMMENT'
                 ]
-Regex_2nd=['\d+','\d+(\.\d+)?',
-           
+Regex_2nd=['\d+','\d+(\.\d+)?', 
          '\"[^\"]*\"',
-          
          '\'[^\']?\'',
-           
-           '{','}',
-           
+           '{', '}',
            '\[',
            '\]',
            '\(','\)',','
         ]
+Dict_of_Tokens = {r'^auto\b': 'AUTO', r'\bnew\b': 'NEW', r'\btrue\b': 'TRUE',
+                  r'\bfalse\b': 'FALSE', r'^break\b': 'TRUE',
+                  '\d+': 'INTEGRAL_LITERAL', '\d*\.\d+': 'FLOAT_LITERAL',
+                  '\"[^\"]*\"': 'STRING_LITERAL', '\'[^\']?\'': 'CHAR_LITERAL',
+                  '{': 'LEFT_CURLY_B', '}': 'RIGHT-CURLY_B', '\[': 'LEFT_SQUARE_B',
+                  '\]': 'RIGHT_SQUARE_B', '\(': 'LEFT_ROUND_B', '\)': 'RIGHT_ROUND_B',
+                  ',': 'COMMA'}
+Output_Tokens = []
 
-print(Regex.search('\"[^\"]*\"', " \"2312\" ").group(0))
+for OneToken in ListOfTokens:
+    for pattern in Dict_of_Tokens:
+        match = Regex.match(pattern, OneToken)
+        if match:
+            Output_Tokens.append(Token(Dict_of_Tokens[pattern], match.group(0)))
+            break
+
+for OneToken in Output_Tokens:
+    print("<{}>: {}".format(OneToken.TYPE, OneToken.VALUE))
+#print(Regex.search('\"[^\"]*\"', " \"2312\" ").group(0))
 #Result=Regex.findall('\d+[\.\d+]?',"2.3121")
 #print(type(Result.group())) -- > Regex.Search
 #print(Result.group(0))
