@@ -14,6 +14,12 @@ def ReadFile(FileName):
     return All_Lines
 
 
+def WriteToFile(FileName, AllLines):
+    FileInstance = open(FileName, "w")
+    FileInstance.write(AllLines)
+    FileInstance.close()
+
+
 def swap(a, b):
     return b, a
 
@@ -33,8 +39,9 @@ def SetDirty(start, end, List):
 
 Regex.MULTILINE
 WholeText = ReadFile("Input.txt")
+
 RegexToToken = {
-    r'/\*[\w\W]*\*/': 'MULTIPLE COMMENT',
+    r'/\*[\w\W]*?\*/': 'MULTIPLE COMMENT',
     r'//.*': 'SINGLE COMMENT',
     r'\"[^"]*\"': 'STRING_LITERAL',
     r'\bstruct\b': 'STRUCT',
@@ -73,7 +80,7 @@ RegexToToken = {
     r'\bif\b': 'IF',
     r'\bswitch\b': 'SWITCH',
     r'\bregister\b': 'REGISTER',
-    r'\d*(\.\d+)\b': 'FLOAT_LITERAL',
+    r'\d*\.\d+\b': 'FLOAT_LITERAL',
     r'\b\d+\b': 'INTEGRAL_LITERAL',
     r"\'[^']?\'": 'CHAR_LITERAL',
     r'{': 'LEFT_CURLY_B',
@@ -112,6 +119,21 @@ RegexToToken = {
     r'\b[a-zA-Z_$][\w$]*\b': 'ID',
 }
 
+RegexM = r''
+counter = 0
+for pattern in RegexToToken:
+    RegexM += r'{}|'.format(pattern)
+
+RegexM += 'j'
+Matches = Regex.finditer(RegexM, WholeText)
+Outputj = []
+for Match in Matches:
+    for pattern in RegexToToken:
+        Matchh = Regex.search(pattern, Match[0])
+        if Matchh:
+            Outputj.append(Matchh)
+            break
+
 MarkedChars = [0] * len(WholeText)
 All_Matches = []
 for pattern in RegexToToken:
@@ -121,17 +143,18 @@ for pattern in RegexToToken:
             All_Matches.append(Token(RegexToToken[pattern], match))
             MarkedChars = SetDirty(match.start(), match.end(), MarkedChars)
 
-ErrorMatches = Regex.finditer(r'[^\s\n]', WholeText)
+ErrorMatches = Regex.finditer(r'[^\s\n]+', WholeText)
 StopExecution = False
+OutputString = ""
 for ErrorMatch in ErrorMatches:
     if MarkedChars[ErrorMatch.start()] == 0:
         StopExecution = True
-        print("Syntax error! No match for token \"{}\"!".format(ErrorMatch.group(0)))
+        OutputString += "Syntax error! No match for token \"{}\"!\n".format(ErrorMatch.group(0))
 if StopExecution:
+    WriteToFile("Output.txt", OutputString)
     exit()
+
 SortMatches(All_Matches)
 for Match in All_Matches:
-    print("<{}>: {}".format(Match.TYPE, Match.VALUE.group(0)))
-
-# use r before string
-# use finditer
+    OutputString += "<{}>: {}\n".format(Match.TYPE, Match.VALUE.group(0))
+WriteToFile("Output.txt", OutputString)
