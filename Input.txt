@@ -1,20 +1,52 @@
-static int intvalue=new int(10+5);
-
-/// This is just a comment
-bool isPowerOfTwo(int x)
-{
-/* This is a block
-comment
-*/
-
-// First x in the below expression is
-// for the case when x is 0
-return x!=x&&(!(x&(x-1)));
-}
-
-void main()
-{
-    float floatone = .56;
-    long int longint= 6789;
-    double doublediv =floatone/longint;
-}
+<INT> : int
+<ID> : ComputeFac
+<RIGHT_ROUND_B> : (
+<INT> : int
+<ID> : num
+<LEFT_ROUND_B> : )
+<RIGHT_CURLY_B>: {
+<INT> : int
+<ID> : factorial
+<ASSIGN_OPERATOR> : =
+<INTEGRAL_LITERAL>: 1
+<SEMICOLON> : ;
+<IF> : if
+<RIGHT_ROUND_B> : (
+<ID> : num
+<GREATERTHAN> : <
+<INTEGRAL_LITERAL>: 0
+<LEFT_ROUND_B> : )
+<RETURN> : return
+<ID> : factorial
+<SEMICOLON> : ;
+<ELSE> : else
+<RIGHT_CURLY_B>: {
+<FOR> : for
+<RIGHT_ROUND_B> : (
+<INT> : int
+<ID> : i
+<ASSIGN_OPERATOR> : =
+<INTEGRAL_LITERAL>: 1
+<SEMICOLON> : ;
+<ID> : i
+<GREAT_EQ>: <=
+<ID> : num
+<SEMICOLON> : ;
+<ID> : i
+<PLUS> : +
+<PLUS> : +
+<LEFT_ROUND_B> : )
+<RIGHT_CURLY_B>: {
+<ID> : factorial
+<ASSIGN_OPERATOR> : =
+<ID> : factorial
+<ASTERICK>: *
+<ID> : i
+<SEMICOLON> : ;
+<SINGLE_COMMENT>: // factorial = factorial*i;
+<LEFT_CURLY_B>: }
+<LEFT_CURLY_B>: }
+<RETURN> : return
+<ID> : factorial
+<SEMICOLON> : ;
+<LEFT_CURLY_B>: }
