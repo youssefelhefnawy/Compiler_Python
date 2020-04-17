@@ -84,7 +84,7 @@ RegexToToken = {
     r'\b\d+\b': 'INTEGRAL_LITERAL',
     r"\'[^']?\'": 'CHAR_LITERAL',
     r'{': 'LEFT_CURLY_B',
-    r'}': 'RIGHT-CURLY_B',
+    r'}': 'RIGHT_CURLY_B',
     r'\[': 'LEFT_SQUARE_B',
     r'\]': 'RIGHT_SQUARE_B',
     r'\(': 'LEFT_ROUND_B',
