@@ -4,9 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+
 
 public class Main {
 	
@@ -32,7 +36,7 @@ public class Main {
 	        return Wholetext;
 		
 	}
-	public static Map<String, String[]> ParseGrammar(String Grammar)
+	public static Map<String, String[]> HandleGrammar(String Grammar)
 	{
 		String[] GrammarArray=Grammar.split("\\n");
 		Map<String, String[]>GrammarRules= new  LinkedHashMap<String,String[]>();
@@ -45,24 +49,71 @@ public class Main {
 		}
 		return GrammarRules;
 	}
+	public static Queue<Token> HandleInputTokens(String Input)
+	{
+		String[] InputArray=Input.split("\\n");
+		Queue<Token> InputTokens=new LinkedList<Token>();
+		Pattern P=Pattern.compile("(<)(.+)(>)");
+		for (int i=0;i<InputArray.length;i++)
+		{
+			
+			String[]Temp=InputArray[i].split(":",2);
+			
+			Temp[0]=Temp[0].replace(" ","");
+			
+			Matcher m=P.matcher(Temp[0]);
+			if (m.find())
+			{
+				Temp[0]=m.group(2);
+			}
+			else
+			{
+				System.out.println("ERROR in Line number"+ i+1);
+			}
+			
+			InputTokens.add(new Token(Temp[0],Temp[1]));
+			
+		}
+		
+		return InputTokens;
+		
+	}
+	public static void PrintTokens(Queue<Token> Tokens)
+	{
+		Token temp=new Token("","");
+		while(Tokens.size()>0)
+		{	
+			temp=Tokens.poll();
+			System.out.println("type -->"+temp.TYPE+"        value -->"+temp.VALUE);
+			
+		}
+	}
+
 	public static void main(String[] args) 
 	{
 		// TODO Auto-generated method stub
 		String input_file_name="Input.txt";
 		String grammar_file_name="MiniC grammar.txt";
-		//String Input=ReadFile(input_file_name);
+		String Input=ReadFile(input_file_name);
 		String Grammar=ReadFile(grammar_file_name);
+		
 		/////////////////////////////
 		Map<String, String[]> GrammarRules = new  LinkedHashMap<String,String[]>();	
-		GrammarRules=ParseGrammar(Grammar);
-		for(Map.Entry<String,String[]> Rule: GrammarRules.entrySet())
-		{
-			System.out.println("KEY:- "+Rule.getKey()+"VALUE :- "+Rule.getValue());
-		}
+		GrammarRules=HandleGrammar(Grammar);
+		Queue<Token>Tokens=HandleInputTokens(Input);
+		PrintTokens(Tokens);
 		
-		//Map<String, String>GrammarRules= new  LinkedHashMap<String,String>();
-
-	
+		
+		
+		
+		
+		
+		
+//		for(Map.Entry<String,String[]> Rule: GrammarRules.entrySet())
+//		{
+//			System.out.println("KEY:- "+Rule.getKey()+"VALUE :- "+Rule.getValue());
+//		}
+//			
 	}
 	
 

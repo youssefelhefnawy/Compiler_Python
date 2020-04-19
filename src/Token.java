@@ -2,7 +2,11 @@
 public class Token {
 	String TYPE;
 	String VALUE;
-	
+	public Token (String t,String v)
+	{
+		TYPE=t;
+		VALUE=v;
+	}
 	public String getTYPE() {
 		return TYPE;
 	}
