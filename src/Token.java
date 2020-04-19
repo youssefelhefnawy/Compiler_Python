@@ -3,6 +3,11 @@ public class Token {
 	String TYPE;
 	String VALUE;
 	
+	public Token(String type, String value) {
+		TYPE = type;
+		VALUE = value;
+	}
+	
 	public String getTYPE() {
 		return TYPE;
 	}
