@@ -7,7 +7,7 @@ public class Token {
 		TYPE = type;
 		VALUE = value;
 	}
-	
+
 	public String getTYPE() {
 		return TYPE;
 	}
