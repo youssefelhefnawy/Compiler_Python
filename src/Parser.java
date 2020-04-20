@@ -29,16 +29,21 @@ public class Parser {
 		}
 	}
 	//////////////////Parser Functions
-	public void program(Node Root) {
+	public boolean program(Node Root) {
 		Root.addNode(new Node("decllist"));
 		Node n1=Root.ChildNodes.get(0);
 		if(!decl_list(n1))
+		{
 			System.out.println("Syntax error: unexpected token <" + allTokens.peek().TYPE + ">:" + allTokens.peek().VALUE);
+			return false;
+		}
 		else 
 		{	
-	
+			
+			
 			System.out.println("COMPILED SUCCESSFULLY");
 			System.out.println("----------------<PARSE TREE>---------------------");
+			return true;
 		}
 		
 	}
@@ -69,7 +74,7 @@ public class Parser {
 		}
 		else
 		{
-			n.addNode(n3);
+			//n.addNode(n3);
 			return true;
 		}
 		

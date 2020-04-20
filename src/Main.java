@@ -104,9 +104,9 @@ public class Main {
 		Parser myParser = new Parser(Tokens);
 		//PrintTokens(Tokens);
 		Node Root=new Node("Program");
-		myParser.program(Root);
-		Root.print(0);
-		
+		if(myParser.program(Root))
+			Root.print(0);
+
 
 		
 		
