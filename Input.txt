@@ -1,29 +1,3 @@
-<INT> : int
+<VOID> : VOID
 <ID> : ComputeFac
-<LEFT_ROUND_B> : (
-<INT> : int
-<ID> : num
-<RIGHT_ROUND_B> : )
-<LEFT_CURLY_B>: {
-<INT> : int
-<ID> : factorial
 <SEMICOLON> : ;
-<ID> : factorial
-<ASSIGNMENT> : =
-<INT_LIT>: 1
-<SEMICOLON> : ;
-<IF> : if
-<LEFT_ROUND_B> : (
-<ID> : num
-<LESSTHAN> : <
-<INT_LIT>: 0
-<RIGHT_ROUND_B> : )
-<RETURN> : return
-<ID> : factorial
-<SEMICOLON> : ;
-<ELSE> : else
-<RETURN> : return
-<ID> : factorial
-<SINGLE_COMMENT>: // Hi
-<SEMICOLON> : ;
-<RIGHT_CURLY_B>: }

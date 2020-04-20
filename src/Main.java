@@ -103,7 +103,9 @@ public class Main {
 		LinkedList<Token>Tokens=HandleInputTokens(Input);
 		Parser myParser = new Parser(Tokens);
 		//PrintTokens(Tokens);
-		myParser.program();
+		Node Root=new Node("Program");
+		myParser.program(Root);
+		Root.print(0);
 		
 
 		
