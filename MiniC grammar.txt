@@ -1,10 +1,10 @@
 program ~ decl_list
 decl_list ~ decl decl_list_alt
 decl_list_alt ~ decl decl_list_alt | EMPTY
-decl ~ var_decl | fun_decl
-var_decl ~ type_spec ID var_decl_alt SEMICOLON
-var_decl_alt ~ LEFT_SQUARE_B RIGHT_SQUARE_B | EMPTY
-fun_decl ~ type_spec ID LEFT_ROUND_B params RIGHT_ROUND_B compound_stmt
+decl ~ type_spec ID decl_alt
+decl_alt ~ var_decl | fun_decl
+var_decl ~ SEMICOLON | LEFT_SQUARE_B RIGHT_SQUARE_B SEMICOLON
+fun_decl ~ LEFT_ROUND_B params RIGHT_ROUND_B compound_stmt
 type_spec ~ VOID | BOOL | INT | FLOAT
 params ~ VOID | param_list | EMPTY
 param_list ~ param param_list_alt
@@ -23,6 +23,7 @@ if_stmt ~ IF LEFT_ROUND_B expr RIGHT_ROUND_B stmt if_stmt_alt
 if_stmt_alt ~ ELSE stmt | EMPTY
 return_stmt ~ RETURN return_stmt_alt SEMICOLON
 return_stmt_alt ~ expr | EMPTY
+break_stmt ~ BREAK SEMICOLON
 expr ~ ID expr_id_alt expr_rec_alt | NOT expr expr_rec_alt | NEGATIVE expr expr_rec_alt | POSITIVE expr expr_rec_alt | LEFT_ROUND_B expr RIGHT_ROUND_B expr_rec_alt | BOOL_LIT expr_rec_alt | INT_LIT expr_rec_alt | FLOAT_LIT expr_rec_alt | NEW type_spec LEFT_SQUARE_B expr RIGHT_SQUARE_B expr_rec_alt
 expr_id_alt ~ ASSIGNMENT expr | LEFT_SQUARE_B expr RIGHT_SQUARE_B expr_arr_alt | LEFT_ROUND_B args RIGHT_ROUND_B | DOT SIZE | EMPTY
 expr_rec_alt ~ expr_op_alt expr expr_rec_alt | EMPTY

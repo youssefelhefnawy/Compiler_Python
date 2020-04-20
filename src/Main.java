@@ -49,10 +49,10 @@ public class Main {
 		}
 		return GrammarRules;
 	}
-	public static Queue<Token> HandleInputTokens(String Input)
+	public static LinkedList<Token> HandleInputTokens(String Input)
 	{
 		String[] InputArray=Input.split("\\n");
-		Queue<Token> InputTokens=new LinkedList<Token>();
+		LinkedList<Token> InputTokens=new LinkedList<Token>();
 		Pattern P=Pattern.compile("(<)(.+)(>)");
 		for (int i=0;i<InputArray.length;i++)
 		{
@@ -93,15 +93,19 @@ public class Main {
 	{
 		// TODO Auto-generated method stub
 		String input_file_name="Input.txt";
-		String grammar_file_name="MiniC grammar.txt";
+		//String grammar_file_name="MiniC grammar.txt";
 		String Input=ReadFile(input_file_name);
-		String Grammar=ReadFile(grammar_file_name);
+		//String Grammar=ReadFile(grammar_file_name);
 		
 		/////////////////////////////
-		Map<String, String[]> GrammarRules = new  LinkedHashMap<String,String[]>();	
-		GrammarRules=HandleGrammar(Grammar);
-		Queue<Token>Tokens=HandleInputTokens(Input);
-		PrintTokens(Tokens);
+		//Map<String, String[]> GrammarRules = new  LinkedHashMap<String,String[]>();	
+		//GrammarRules=HandleGrammar(Grammar);
+		LinkedList<Token>Tokens=HandleInputTokens(Input);
+		Parser myParser = new Parser(Tokens);
+		//PrintTokens(Tokens);
+		myParser.program();
+		
+
 		
 		
 		
