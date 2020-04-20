@@ -7,13 +7,9 @@ public class Parser {
 		allTokens = inTokens;
 	}
 	
-	void printError() {
-		System.out.println("Syntax error: unexpected token <" + allTokens.peek().TYPE + ">: " + allTokens.peek().VALUE);
-		System.exit(0);
-	}
-	
-	public boolean program() {
-		return decl_list();
+	public void program() {
+		if(!decl_list())
+			System.out.println("Syntax error: unexpected token <" + allTokens.peek().TYPE + ">:" + allTokens.peek().VALUE);
 	}
 	
 	boolean decl_list() {
@@ -21,16 +17,7 @@ public class Parser {
 	}
 	
 	boolean decl_list_alt() {
-		if (allTokens.peek() == null) {
-			return true;
-		}
-		else if(decl() && decl_list_alt()) {
-			return true;
-		}
-		else {
-			printError();
-			return false;
-		}
+		return decl() && decl_list_alt() || true;
 	}
 	
 	boolean decl() {
@@ -39,14 +26,8 @@ public class Parser {
 				allTokens.poll();
 				return decl_alt();
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	boolean decl_alt() {
@@ -66,19 +47,9 @@ public class Parser {
 					allTokens.poll();
 					return true;
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				printError();
-				return false;
 			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	boolean fun_decl() {
@@ -89,22 +60,14 @@ public class Parser {
 					allTokens.poll();
 					return compound_stmt();
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				return false;
 			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean type_spec() {
+		if(allTokens.peek() == null)
+			return false;
 		if(allTokens.peek().TYPE.equals("VOID")) {
 			allTokens.poll();
 			return true;
@@ -121,27 +84,15 @@ public class Parser {
 			allTokens.poll();
 			return true;
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean params() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("VOID")) {
+		if(allTokens.peek().TYPE.equals("VOID")) {
 			allTokens.poll();
 			return true;
 		}
-		else if(param_list()) {
-			return true;
-		}
-		else {
-			printError();
-			return false;
-		}
+		return param_list() || true;
 	}
 	
 	boolean param_list() {
@@ -149,16 +100,11 @@ public class Parser {
 	}
 	
 	boolean param_list_alt() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("COMMA")) {
+		if(allTokens.peek().TYPE.equals("COMMA")) {
 			allTokens.poll();
-			return param() && param_list_alt();
+			return param() && param_list_alt() || true;
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 	
 	boolean param() {
@@ -167,72 +113,36 @@ public class Parser {
 				allTokens.poll();
 				return param_alt();
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	boolean param_alt() {
-		System.out.println(allTokens.peek().TYPE);
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
+		if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("RIGHT_SQUARE_B")) {
 				allTokens.poll();
 				return true;
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 	
 	boolean compound_stmt() {
 		if(allTokens.peek().TYPE.equals("LEFT_CURLY_B")) {
 			allTokens.poll();
-			if(local_decls()) {
-				if(stmt_list()) {
-					if(allTokens.peek().TYPE.equals("RIGHT_CURLY_B")) {
-						allTokens.poll();
-						return true;
-					}
-					else {
-						printError();
-						return false;
-					}
-				}
-				else {
-					return false;
+			if(local_decls() && stmt_list()) {
+				if(allTokens.peek().TYPE.equals("RIGHT_CURLY_B")) {
+					allTokens.poll();
+					return true;
 				}
 			}
-			else {
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;	
 	}
 	
 	boolean stmt_list() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else {
-			return stmt() && stmt_list();
-		}
+		return stmt() && stmt_list() || true;
 	}
 	
 	boolean stmt() {
@@ -249,15 +159,8 @@ public class Parser {
 				allTokens.poll();
 				return true;
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean while_stmt() {
@@ -270,24 +173,10 @@ public class Parser {
 						allTokens.poll();
 						return stmt();
 					}
-					else {
-						printError();
-						return false;
-					}
-				}
-				else {
-					return false;
 				}
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean if_stmt() {
@@ -300,38 +189,18 @@ public class Parser {
 						allTokens.poll();
 						return stmt() && if_stmt_alt();
 					}
-					else {
-						printError();
-						return false;
-					}
-				}
-				else {
-					return false;
 				}
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean if_stmt_alt() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("ELSE")) {
+		if(allTokens.peek().TYPE.equals("ELSE")) {
 			allTokens.poll();
-			return stmt();
+			return stmt() || true;
 		}
-		else {
-			printError();
-			return false;
-		}
+		return true;
 	}
 	
 	boolean return_stmt() {
@@ -342,28 +211,13 @@ public class Parser {
 					allTokens.poll();
 					return true;
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				return false;
 			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean return_stmt_alt() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else {
-			return expr();
-		}
+		return expr() || true;
 	}
 	
 	boolean break_stmt() {
@@ -373,24 +227,12 @@ public class Parser {
 				allTokens.poll();
 				return true;
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean local_decls() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else {
-			return local_decl() && local_decls();
-		}
+		return local_decl() && local_decls() || true;
 	}
 	
 	boolean local_decl() {
@@ -402,44 +244,21 @@ public class Parser {
 						allTokens.poll();
 						return true;
 					}
-					else {
-						printError();
-						return false;
-					}
-				}
-				else {
-					return false;
 				}
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 	
 	boolean local_decl_alt() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
+		if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("RIGHT_SQUARE_B")) {
 				allTokens.poll();
 				return true;
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean expr() {
@@ -466,13 +285,6 @@ public class Parser {
 					allTokens.poll();
 					return expr_rec_alt();
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				return false;
 			}
 		}
 		else if(allTokens.peek().TYPE.equals("BOOL_LIT")) {
@@ -497,51 +309,25 @@ public class Parser {
 							allTokens.poll();
 							return expr_rec_alt();
 						}
-						else {
-							printError();
-							return false;
-						}
-					}
-					else {
-						return false;
 					}
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				return false;
 			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return false;
 	}
 	
 	boolean expr_id_alt() {
-		if(allTokens.peek() == null)
-			return true;
-		else if(allTokens.peek().TYPE.equals("ASSIGNMENT")) {
+		if(allTokens.peek().TYPE.equals("ASSIGNMENT")) {
 			allTokens.poll();
-			return expr();
+			return expr() || true;
 		}
 		else if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 			allTokens.poll();
 			if(expr()) {
 				if(allTokens.peek().TYPE.equals("RIGHT_SQUARE_B")) {
 					allTokens.poll();
-					return expr_arr_alt();
+					return expr_arr_alt() || true;
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				return false;
 			}
 		}
 		else if(allTokens.peek().TYPE.equals("LEFT_ROUND_B")) {
@@ -551,13 +337,6 @@ public class Parser {
 					allTokens.poll();
 					return true;
 				}
-				else {
-					printError();
-					return false;
-				}
-			}
-			else {
-				return false;
 			}
 		}
 		else if(allTokens.peek().TYPE.equals("DOT")) {
@@ -566,24 +345,12 @@ public class Parser {
 				allTokens.poll();
 				return true;
 			}
-			else {
-				printError();
-				return false;
-			}
 		}
-		else {
-			printError();
-			return false;
-		}
+		return true;
 	}
 	
 	boolean expr_rec_alt() {
-		if(allTokens.peek() == null ) {
-			return true;
-		}
-		else {
-			return expr_op_alt() && expr() && expr_rec_alt();
-		}
+		return expr_op_alt() && expr() && expr_rec_alt() || true;
 	}
 
 	boolean expr_op_alt() {
@@ -639,33 +406,19 @@ public class Parser {
 			allTokens.poll();
 			return true;
 		}
-		else {
-			printError();
-			return false;
-		}
+		return true;
 	}
 	
 	boolean expr_arr_alt() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("ASSIGNMENT")) {
+		if(allTokens.peek().TYPE.equals("ASSIGNMENT")) {
 			allTokens.poll();
-			return expr();
+			return expr() || true;
 		}
-		else {
-			printError();
-			return false;
-		}
+		return true;
 	}
 	
 	boolean args() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else {
-			return arg_list();
-		}
+		return arg_list() || true;
 	}
 
 	boolean arg_list() {
@@ -673,17 +426,11 @@ public class Parser {
 	}
 	
 	boolean arg_list_alt() {
-		if(allTokens.peek() == null) {
-			return true;
-		}
-		else if(allTokens.peek().TYPE.equals("COMMA")) {
+		if(allTokens.peek().TYPE.equals("COMMA")) {
 			allTokens.poll();
-			return expr() && arg_list_alt();
+			return expr() && arg_list_alt() || true;
 		}
-		else {
-			printError();
-			return false;
-		}
+		return true;
 	}
 	
 }
