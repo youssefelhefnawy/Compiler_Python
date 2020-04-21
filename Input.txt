@@ -1,3 +1,32 @@
+<INT> : int
+<ID> : ComputeFac
+<LEFT_ROUND_B> : (
+<INT> : int
+<ID> : num
+<RIGHT_ROUND_B> : )
+<LEFT_CURLY_B>: {
+<INT> : int
+<ID> : factorial
 <SEMICOLON> : ;
-<INT>: int
- <ID> : X
+<ID> : factorial
+<ASSIGNMENT> : =
+<INT_LIT>: 1
+<SEMICOLON> : ;
+<IF> : if
+<LEFT_ROUND_B> : (
+<ID> : num
+<LESSTHAN> : <
+<INT_LIT>: 0
+<RIGHT_ROUND_B> : )
+<RETURN> : return
+<ID> : factorial
+<SEMICOLON> : ;
+<ELSE> : else
+<RETURN> : return
+<ID> : factorial
+<PLUS> : +
+<ID> : factorial
+<MOD> : %
+<INT_LIT> : 5
+<SEMICOLON> : ;
+<RIGHT_CURLY_B>: }

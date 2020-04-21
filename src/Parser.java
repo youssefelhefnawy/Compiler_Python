@@ -10,7 +10,13 @@ public class Parser {
 		allTokens = inTokens;
 		ParseTree=new Stack<Node>();
 	}
-	private Node  AdjustParseTree(Stack<Node> ParseTree,Node Root) 
+	
+	void printError() {
+		System.out.println("Syntax error: unexpected token <" + allTokens.peek().TYPE + ">:" + allTokens.peek().VALUE);
+		System.exit(0);
+	}
+
+	private Node AdjustParseTree(Stack<Node> ParseTree,Node Root) 
 	{	
 		
 		int Index=ParseTree.indexOf(Root);
@@ -21,6 +27,7 @@ public class Parser {
 		}
 		return Root;
 	}
+	
 	private void PrintTree(Stack<Node>ParseTree)
 	{
 		for(Node node:ParseTree) 
@@ -39,13 +46,10 @@ public class Parser {
 		}
 		else 
 		{	
-			
-			
 			System.out.println("COMPILED SUCCESSFULLY");
 			System.out.println("----------------<PARSE TREE>---------------------");
 			return true;
 		}
-		
 	}
 	
 	boolean decl_list(Node n) {
@@ -53,10 +57,10 @@ public class Parser {
 		Node decl_list_alt=new Node("decleration list alternative");
 		n.addNode(decl);
 		n.addNode(decl_list_alt);
-		if( decl(decl) && decl_list_alt(decl_list_alt))
-			{
+		if(decl(decl) && decl_list_alt(decl_list_alt))
+		{
 			return true;
-			}
+		}
 		else return false;
 	}
 	
@@ -64,7 +68,6 @@ public class Parser {
 	{	
 		Node n1=new Node("decleration");
 		Node n2=new Node("decleration list alternative");
-		Node n3=new Node("EMPTY");
 
 		if( decl(n1) && decl_list_alt(n2))
 		{
@@ -74,14 +77,15 @@ public class Parser {
 		}
 		else
 		{
-			//n.addNode(n3);
 			return true;
 		}
 		
 	}
 	
 	boolean decl(Node n) {
-		
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		Node n1=new Node("typespec");
 		Node n2=new Node("ID");
 		Node n3=new Node("decleration_alt");
@@ -96,18 +100,16 @@ public class Parser {
 			//	ParseTree.add(new Node("ID"));
 				
 	
-				if(decl_alt(n3));
+				if(decl_alt(n3))
 				{
 				//	ParseTree.add(AdjustParseTree(ParseTree,new Node("Decleration Alternative")));
-					
-					
 					return true;
 				}
+				else
+					printError();
 			}
-		
 		}
-		
-		
+
 		return false;
 	}
 	
@@ -131,14 +133,12 @@ public class Parser {
 	}
 	
 	boolean var_decl(Node n) {
-		
-		if(allTokens.peek().TYPE.equals("SEMICOLON")) {
+		if(allTokens.peek() == null) {
+			return false;
+		}
+		else if(allTokens.peek().TYPE.equals("SEMICOLON")) {
 			allTokens.poll();
 			n.addNode(new Node("SEMI COLON"));
-			
-		
-
-
 			return true;
 		}
 		else if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
@@ -155,12 +155,19 @@ public class Parser {
 
 					return true;
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;
 	}
 	
 	boolean fun_decl(Node n) {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("LEFT_ROUND_B")) {
 			allTokens.poll();
 			n.addNode(new Node("LEFT_ROUND_B"));
@@ -170,14 +177,19 @@ public class Parser {
 					n.addNode(new Node("RIGHT_ROUND_B"));
 					return compound_stmt();
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;
 	}
 	
 	boolean type_spec(Node n) {
-		if(allTokens.peek() == null)
+		if(allTokens.peek() == null) {
 			return false;
+		}
 		if(allTokens.peek().TYPE.equals("VOID")) {
 			allTokens.poll();
 			n.addNode(new Node("VOID"));
@@ -191,8 +203,6 @@ public class Parser {
 		else if(allTokens.peek().TYPE.equals("INT")) {
 			allTokens.poll();
 			n.addNode(new Node("INT"));
-						
-			
 			return true;
 		}
 		else if (allTokens.peek().TYPE.equals("FLOAT")) {
@@ -204,6 +214,9 @@ public class Parser {
 	}
 	
 	boolean params() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("VOID")) {
 			allTokens.poll();
 			return true;
@@ -216,35 +229,55 @@ public class Parser {
 	}
 	
 	boolean param_list_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("COMMA")) {
 			allTokens.poll();
-			return param() && param_list_alt() || true;
+			if(param() && param_list_alt())
+				return true;
+			else
+				printError();
 		}
 		return true;
 	}
 	
 	boolean param() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(type_spec(null)) {
 			if(allTokens.peek().TYPE.equals("ID")) {
 				allTokens.poll();
-				return param_alt();
+				if(param_alt())
+					return true;
+				else
+					printError();
 			}
 		}
 		return false;
 	}
 	
 	boolean param_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("RIGHT_SQUARE_B")) {
 				allTokens.poll();
 				return true;
 			}
+			else
+				printError();
 		}
 		return true;
 	}
 	
 	boolean compound_stmt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("LEFT_CURLY_B")) {
 			allTokens.poll();
 			if(local_decls() && stmt_list()) {
@@ -252,7 +285,11 @@ public class Parser {
 					allTokens.poll();
 					return true;
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;	
 	}
@@ -266,6 +303,9 @@ public class Parser {
 	}
 	
 	boolean expr_stmt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("SEMICOLON")) {
 			allTokens.poll();
 			return true;
@@ -280,6 +320,9 @@ public class Parser {
 	}
 	
 	boolean while_stmt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("WHILE")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("LEFT_ROUND_B")) {
@@ -289,13 +332,22 @@ public class Parser {
 						allTokens.poll();
 						return stmt();
 					}
+					else
+						printError();
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;
 	}
 	
 	boolean if_stmt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("IF")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("LEFT_ROUND_B")) {
@@ -305,21 +357,36 @@ public class Parser {
 						allTokens.poll();
 						return stmt() && if_stmt_alt();
 					}
+					else
+						printError();
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;
 	}
 	
 	boolean if_stmt_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("ELSE")) {
 			allTokens.poll();
-			return stmt() || true;
+			if(stmt())
+				return true;
+			else
+				printError();
 		}
 		return true;
 	}
 	
 	boolean return_stmt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("RETURN")) {
 			allTokens.poll();
 			if(return_stmt_alt()) {
@@ -327,7 +394,11 @@ public class Parser {
 					allTokens.poll();
 					return true;
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;
 	}
@@ -337,12 +408,17 @@ public class Parser {
 	}
 	
 	boolean break_stmt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("BREAK")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("SEMICOLON")) {
 				allTokens.poll();
 				return true;
 			}
+			else
+				printError();
 		}
 		return false;
 	}
@@ -352,6 +428,9 @@ public class Parser {
 	}
 	
 	boolean local_decl() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(type_spec(null)) {
 			if(allTokens.peek().TYPE.equals("ID")) {
 				allTokens.poll();
@@ -360,39 +439,63 @@ public class Parser {
 						allTokens.poll();
 						return true;
 					}
+					else
+						printError();
 				}
+				else
+					printError();
 			}
 		}
 		return false;
 	}
 	
 	boolean local_decl_alt() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 			allTokens.poll();
 			if(allTokens.peek().TYPE.equals("RIGHT_SQUARE_B")) {
 				allTokens.poll();
 				return true;
 			}
+			else
+				printError();
 		}
-		return false;
+		return true;
 	}
 	
 	boolean expr() {
+		if(allTokens.peek() == null) {
+			return false;
+		}
 		if(allTokens.peek().TYPE.equals("ID")) {
 			allTokens.poll();
-			return expr_id_alt() && expr_rec_alt();
+			if(expr_id_alt() && expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("NOT")) {
 			allTokens.poll();
-			return expr() && expr_rec_alt();
+			if(expr() && expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("NEGATIVE")) {
 			allTokens.poll();
-			return expr() && expr_rec_alt();
+			if(expr() && expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("POSITIVE")) {
 			allTokens.poll();
-			return expr() && expr_rec_alt();
+			if(expr() && expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("LEFT_ROUND_B")) {
 			allTokens.poll();
@@ -401,19 +504,32 @@ public class Parser {
 					allTokens.poll();
 					return expr_rec_alt();
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("BOOL_LIT")) {
 			allTokens.poll();
-			return expr_rec_alt();
+			if(expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("INT_LIT")) {
 			allTokens.poll();
-			return expr_rec_alt();
+			if(expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("FLOAT_LIT")) {
 			allTokens.poll();
-			return expr_rec_alt();
+			if(expr_rec_alt())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("NEW")) {
 			allTokens.poll();
@@ -425,26 +541,47 @@ public class Parser {
 							allTokens.poll();
 							return expr_rec_alt();
 						}
+						else
+							printError();
 					}
+					else
+						printError();
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		return false;
 	}
 	
 	boolean expr_id_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("ASSIGNMENT")) {
 			allTokens.poll();
-			return expr() || true;
+			if(expr())
+				return true;
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 			allTokens.poll();
 			if(expr()) {
 				if(allTokens.peek().TYPE.equals("RIGHT_SQUARE_B")) {
 					allTokens.poll();
-					return expr_arr_alt() || true;
+					if(expr_arr_alt())
+						return true;
+					else
+						printError();
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("LEFT_ROUND_B")) {
 			allTokens.poll();
@@ -453,7 +590,11 @@ public class Parser {
 					allTokens.poll();
 					return true;
 				}
+				else
+					printError();
 			}
+			else
+				printError();
 		}
 		else if(allTokens.peek().TYPE.equals("DOT")) {
 			allTokens.poll();
@@ -461,6 +602,8 @@ public class Parser {
 				allTokens.poll();
 				return true;
 			}
+			else
+				printError();
 		}
 		return true;
 	}
@@ -470,6 +613,9 @@ public class Parser {
 	}
 
 	boolean expr_op_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("OR")) {
 			allTokens.poll();
 			return true;
@@ -522,13 +668,19 @@ public class Parser {
 			allTokens.poll();
 			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	boolean expr_arr_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("ASSIGNMENT")) {
 			allTokens.poll();
-			return expr() || true;
+			if(expr())
+				return true;
+			else
+				printError();
 		}
 		return true;
 	}
@@ -542,9 +694,15 @@ public class Parser {
 	}
 	
 	boolean arg_list_alt() {
+		if(allTokens.peek() == null) {
+			return true;
+		}
 		if(allTokens.peek().TYPE.equals("COMMA")) {
 			allTokens.poll();
-			return expr() && arg_list_alt() || true;
+			if(expr() && arg_list_alt())
+				return true;
+			else
+				printError();
 		}
 		return true;
 	}

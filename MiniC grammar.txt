@@ -24,15 +24,10 @@ break_stmt ~ BREAK SEMICOLON
 local_decls ~ local_decl local_decls | EMPTY
 local_decl ~ type_spec ID local_decl_alt SEMICOLON
 local_decl_alt ~ LEFT_SQUARE_B RIGHT_SQUARE_B | EMPTY
-expr ~ ID expr_id_alt expr_rec_alt | NOT expr expr_rec_alt | NEGATIVE expr expr_rec_alt |
-POSITIVE expr expr_rec_alt | LEFT_ROUND_B expr RIGHT_ROUND_B expr_rec_alt |
-BOOL_LIT expr_rec_alt | INT_LIT expr_rec_alt | FLOAT_LIT expr_rec_alt |
-NEW type_spec LEFT_SQUARE_B expr RIGHT_SQUARE_B expr_rec_alt
-expr_id_alt ~ ASSIGNMENT expr | LEFT_SQUARE_B expr RIGHT_SQUARE_B expr_arr_alt | 
-LEFT_ROUND_B args RIGHT_ROUND_B | DOT SIZE | EMPTY
+expr ~ ID expr_id_alt expr_rec_alt | NOT expr expr_rec_alt | NEGATIVE expr expr_rec_alt | POSITIVE expr expr_rec_alt | LEFT_ROUND_B expr RIGHT_ROUND_B expr_rec_alt | BOOL_LIT expr_rec_alt | INT_LIT expr_rec_alt | FLOAT_LIT expr_rec_alt | NEW type_spec LEFT_SQUARE_B expr RIGHT_SQUARE_B expr_rec_alt
+expr_id_alt ~ ASSIGNMENT expr | LEFT_SQUARE_B expr RIGHT_SQUARE_B expr_arr_alt | LEFT_ROUND_B args RIGHT_ROUND_B | DOT SIZE | EMPTY
 expr_rec_alt ~ expr_op_alt expr expr_rec_alt | EMPTY
-expr_op_alt ~ OR | EQUAL | NOT EQUAL | LESS THAN OR EQUAL | LESSTHAN | 
-GREATER THAN OR EQUAL | GREATER THAN | AND | PLUS | MINUS | MULTIPLY | DIVIDE | MOD | EMPTY
+expr_op_alt ~ OR | EQUAL | NOT EQUAL | LESS THAN OR EQUAL | LESSTHAN | GREATER THAN OR EQUAL | GREATER THAN | AND | PLUS | MINUS | MULTIPLY | DIVIDE | MOD
 expr_arr_alt ~ ASSIGNMENT expr | EMPTY
 args ~ arg_list | EMPTY
 arg_list ~ expr arg_list_alt

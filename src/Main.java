@@ -36,6 +36,7 @@ public class Main {
 	        return Wholetext;
 		
 	}
+	
 	public static Map<String, String[]> HandleGrammar(String Grammar)
 	{
 		String[] GrammarArray=Grammar.split("\\n");
@@ -49,6 +50,7 @@ public class Main {
 		}
 		return GrammarRules;
 	}
+	
 	public static LinkedList<Token> HandleInputTokens(String Input)
 	{
 		String[] InputArray=Input.split("\\n");
@@ -70,14 +72,11 @@ public class Main {
 			{
 				System.out.println("ERROR in Line number"+ i+1);
 			}
-			
 			InputTokens.add(new Token(Temp[0],Temp[1]));
-			
 		}
-		
 		return InputTokens;
-		
 	}
+	
 	public static void PrintTokens(Queue<Token> Tokens)
 	{
 		Token temp=new Token("","");
@@ -85,13 +84,11 @@ public class Main {
 		{	
 			temp=Tokens.poll();
 			System.out.println("type -->"+temp.TYPE+"        value -->"+temp.VALUE);
-			
 		}
 	}
 
 	public static void main(String[] args) 
 	{
-		// TODO Auto-generated method stub
 		String input_file_name="Input.txt";
 		//String grammar_file_name="MiniC grammar.txt";
 		String Input=ReadFile(input_file_name);
@@ -106,14 +103,6 @@ public class Main {
 		Node Root=new Node("Program");
 		if(myParser.program(Root))
 			Root.print(0);
-
-
-		
-		
-		
-		
-		
-		
 		
 //		for(Map.Entry<String,String[]> Rule: GrammarRules.entrySet())
 //		{
@@ -122,5 +111,4 @@ public class Main {
 //			
 	}
 	
-
 }
