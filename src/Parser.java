@@ -36,10 +36,11 @@ public class Parser {
 	boolean decl_list(Node n) {
 		Node decl=new Node("decleration");
 		Node decl_list_alt=new Node("decleration list alternative");
-		n.addNode(decl);
-		n.addNode(decl_list_alt);
+		
 		if(decl(decl) && decl_list_alt(decl_list_alt))
 		{
+			n.addNode(decl);
+			n.addNode(decl_list_alt);
 			return true;
 		}
 		else return false;
@@ -72,7 +73,6 @@ public class Parser {
 		Node n3=new Node("decleration_alt");
 		n.addNode(n1);
 		n.addNode(n2);
-		n.addNode(n3);
 		if(type_spec(n1)) {
 			
 			//ParseTree.add(AdjustParseTree(ParseTree,new Node("Type Spec")));
@@ -82,6 +82,7 @@ public class Parser {
 	
 				if(decl_alt(n3))
 				{
+					n.addNode(n3);
 					return true;
 				}
 				else
@@ -170,7 +171,8 @@ public class Parser {
 		return false;
 	}
 	
-	boolean type_spec(Node n) {
+	boolean type_spec(Node n) 
+	{
 		if(allTokens.peek() == null) {
 			return false;
 		}
@@ -198,18 +200,20 @@ public class Parser {
 	}
 	
 	boolean params(Node n) {
-		
+				
 		Node n1=new Node("Parameter List");
-	
+		
+		
 		if(allTokens.peek() == null) {
 			return true;
 		}
-		if(allTokens.peek().TYPE.equals("VOID")) {
+		if(allTokens.peek().TYPE.equals("VOID")) 
+		{
 			allTokens.poll();
 			n.addNode(new Node("VOID"));
 			return true;
 		}
-		return param_list(n1) || true;
+		if( param_list(n1)) n.addNode(n1); return true;	
 	}
 	
 	boolean param_list(Node n) {
@@ -525,6 +529,7 @@ public class Parser {
 				n.addNode(new Node("ID"));
 				allTokens.poll();
 				if(local_decl_alt(n1)) {
+					n.addNode(n1);
 					if(allTokens.peek().TYPE.equals("SEMICOLON")) {
 						n.addNode(new Node("SEMICOLON"));
 						allTokens.poll();
@@ -685,6 +690,7 @@ public class Parser {
 			n.addNode(new Node("New"));
 			Node n4=new Node("type spec");
 			if(type_spec(n4)) {
+				n.addNode(n4);
 				if(allTokens.peek().TYPE.equals("LEFT_SQUARE_B")) {
 					n.addNode(new Node("Left square bracket"));
 

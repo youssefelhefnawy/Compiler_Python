@@ -3,6 +3,9 @@
 <LEFT_ROUND_B> : (
 <INT> : int
 <ID> : num
+<COMMA>:,
+<FLOAT> : int
+<ID> : lol
 <RIGHT_ROUND_B> : )
 <LEFT_CURLY_B>: {
 <INT> : int
